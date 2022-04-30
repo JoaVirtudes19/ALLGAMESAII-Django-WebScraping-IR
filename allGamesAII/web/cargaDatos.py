@@ -9,7 +9,7 @@ from whoosh.index import create_in,open_dir
 from whoosh.fields import *
 from whoosh import qparser,query
 from datetime import datetime
-from web.models import Juego
+from web.models import Juego, Tienda
 from web.models import Genero
 from web.models import Plataforma
 #Para transformar las fechas
@@ -17,11 +17,13 @@ import locale
 locale.setlocale(locale.LC_TIME, '')
 
 
-def crearJuegos(dicGeneros,generosTotales,listaJuegos):
+def crearJuegos(dicGeneros,generosTotales,listaJuegos,tienda):
     generosTotales = [ Genero(nombre=nombre) for nombre in generosTotales]
     Genero.objects.bulk_create(generosTotales,ignore_conflicts=True)
+    print("GENEROS CREADOS")
     Juego.objects.bulk_create(listaJuegos)
-    for juego in Juego.objects.all():
+    print("JUEGOS CREADOS")
+    for juego in Juego.objects.all().filter(tienda=tienda):
         for genr in dicGeneros[juego.url]:
             juego.genero.add(Genero.objects.get(nombre=genr))
 def almacenar(nombreIndice):
@@ -29,24 +31,27 @@ def almacenar(nombreIndice):
     Juego.objects.all().delete()
     Plataforma.objects.all().delete()
     Genero.objects.all().delete()
+    Tienda.objects.all().delete()
     #Creamos el indice
     schema = Schema(nombre=TEXT(),url=ID(stored=True),descripcion=TEXT()) #Dejamos descripción y nombre como no stored, ya que este dato lo tenemos el django
     if not os.path.exists(nombreIndice):
         os.mkdir(nombreIndice)
     ix = create_in(nombreIndice,schema=schema)
-    #cargaInst = instGaming(nombreIndice)
     cargaEneba = enebaGaming(nombreIndice)
-    return cargaEneba
+    cargaInst = instGaming(nombreIndice)
+    #resultado = cargaInst and cargaEneba
+    #print(resultado)
+    return cargaEneba and cargaInst
 
 ##AÑADIR UN PARAMETRO DE ENTRADA PARA INDICAR CUANTAS PÁGINAS CARGAR COMO MÁXIMO
 #La plataforma debe de coincidir en los scraping, así que mejor reconocerla y ponerla de de forma generica para nuestro comparador.
 #Falta añadir fecha de salida del producto
 
 def instGaming(nombreIndice):
-    def crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generos,plataforma,fecha,precio):
+    def crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generos,plataforma,fecha,precio,tienda):
         #Creamos la plataforma
         juego = Juego(nombre=nombre,url=url,urlImg=urlImg,descripcion=descripcion,nota=nota
-        ,descuento=descuento,plataforma=plataforma,fecha=fecha,precio=precio)
+        ,descuento=descuento,plataforma=plataforma,fecha=fecha,precio=precio,tienda=tienda)
         listaJuegos.append(juego)
         dicGeneros[url] = generos
     #Creamos conjuntos para almacenar los generos y plataformas para seguidamente crearlos todos a la vez
@@ -56,6 +61,7 @@ def instGaming(nombreIndice):
     dicGeneros = dict()
     listaJuegos = list()
     try:
+        tienda, creada = Tienda.objects.get_or_create(tienda = "InstantGaming")
         print("Empezamos")
         ix = open_dir(nombreIndice)
         wr = ix.writer()
@@ -129,8 +135,8 @@ def instGaming(nombreIndice):
                     generosTotales.append(genero)
                 #Añadir guardar comentarios en el scraping, todos pegados
                 #wr.add_document(nombre=nombre,url=url,descripcion=descripcion)
-                crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio)
-        crearJuegos(dicGeneros,generosTotales,listaJuegos)
+                crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio,tienda)
+        crearJuegos(dicGeneros,generosTotales,listaJuegos,tienda)
         wr.commit()
     except Exception as e:
         print(e)
@@ -139,10 +145,10 @@ def instGaming(nombreIndice):
 
 
 def enebaGaming(nombreIndice):
-    def crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generos,plataforma,fecha,precio):
+    def crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generos,plataforma,fecha,precio,tienda):
         #Creamos la plataforma
         juego = Juego(nombre=nombre,url=url,urlImg=urlImg,descripcion=descripcion,nota=nota
-        ,descuento=descuento,plataforma=plataforma,fecha=fecha,precio=precio)
+        ,descuento=descuento,plataforma=plataforma,fecha=fecha,precio=precio,tienda=tienda)
         listaJuegos.append(juego)
         dicGeneros[url] = generos
     #Creamos conjuntos para almacenar los generos y plataformas para seguidamente crearlos todos a la vez
@@ -152,6 +158,7 @@ def enebaGaming(nombreIndice):
     dicGeneros = dict()
     listaJuegos = list()
     try:
+        tienda ,creada = Tienda.objects.get_or_create(tienda="Eneba")
         print("Empezamos")
         ix = open_dir(nombreIndice)
         wr = ix.writer()
@@ -219,8 +226,8 @@ def enebaGaming(nombreIndice):
                         generosTotales.append(genero)
                 print(url)
                 print(precio)
-                crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio)
-        crearJuegos(dicGeneros,generosTotales,listaJuegos)
+                crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio,tienda)
+        crearJuegos(dicGeneros,generosTotales,listaJuegos,tienda)
         wr.commit()
     except Exception as e:
         print(e)
