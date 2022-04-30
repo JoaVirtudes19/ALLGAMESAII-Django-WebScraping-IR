@@ -4,7 +4,8 @@ from web import cargaDatos
 # Create your views here.
 
 def prueba(request):
-    return render(request,'prueba.html')
+    juegos = Juego.objects.all()
+    return render(request,'inicio.html',{"juegos":juegos})
 
 
 def cargar(request):

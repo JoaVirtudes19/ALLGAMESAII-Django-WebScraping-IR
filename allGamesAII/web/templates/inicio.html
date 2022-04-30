@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block tituloPagina %} Titulo {% endblock %}
+
+{% block contenido %}
+    <h1>Bienvenido a la pantalla de titulo</h1>
+    <h2>Estos son los juegos que tenemos cargados actualmente</h2>
+    {% for juego in juegos %}
+        <a href="{{juego.url}}"><h3>{{juego.nombre}}</h3></a>
+        <p>Id: {{juego.id}}</p>
+    {% endfor %}
+{% endblock %}
+
+{% block encabezado %}
+<p>Esto es el encabezado</p>
+    {% endblock %}
