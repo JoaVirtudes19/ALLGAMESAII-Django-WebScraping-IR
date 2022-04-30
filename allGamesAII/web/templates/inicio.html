@@ -9,6 +9,8 @@
     {% for juego in juegos %}
         <a href="{{juego.url}}"><h3>{{juego.nombre}}</h3></a>
         <p>Id: {{juego.id}}</p>
+    {% empty %}
+    <h4>No se ha cargado ningun juego todavía</h4>
     {% endfor %}
 {% endblock %}
 

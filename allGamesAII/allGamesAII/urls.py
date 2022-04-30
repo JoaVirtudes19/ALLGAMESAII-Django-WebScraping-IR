@@ -21,6 +21,8 @@ from web.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('inicio',prueba),
     path('',prueba),
+    path('juegos/juego/<int:id_juego>',juego),
     path('cargar/',cargar),
 ]

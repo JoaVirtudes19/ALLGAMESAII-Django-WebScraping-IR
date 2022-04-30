@@ -8,6 +8,10 @@ def prueba(request):
     return render(request,'inicio.html',{"juegos":juegos})
 
 
+def juego(request,id_juego):
+    juego = Juego.objects.get(id=id_juego)
+    return render(request,'juego.html',{"juego":juego})
+
 def cargar(request):
     
     if cargaDatos.almacenar("pruebaIndice"):

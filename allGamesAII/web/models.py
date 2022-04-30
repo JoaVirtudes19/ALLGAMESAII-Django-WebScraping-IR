@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -7,7 +8,12 @@ from django.db import models
 #Crear los juegos sin los enlaces y guardar en un diccionario para 
 #seguidamente añadirlo después de un bulk (django 3)
 
-
+#class Usuario(models.Model):
+#    user = models.OneToOneField(User, on_delete=models.CASCADE)
+#    nombre = models.TextField()
+#    apellidos = models.TextField()
+#    fechaNacimiento = models.TextField()
+#    generosInteresados =  models.ManyToManyField("Genero")
 
 class Plataforma(models.Model):
     nombre = models.TextField(unique=True)
@@ -26,6 +32,7 @@ class Juego(models.Model):
     urlImg =models.TextField()
     descripcion = models.TextField()
     nota = models.FloatField()
+    precio = models.FloatField()
     descuento = models.IntegerField()
     fecha = models.DateField(null=True)
     genero = models.ManyToManyField(Genero)

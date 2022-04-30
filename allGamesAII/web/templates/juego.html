@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block tituloPagina %} {{juego.nombre}} {% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row     ">
+        <div class="col-sm-8">
+            <h1>{{juego.nombre}}</h1>
+        </div>
+        <div class="col-sm-4">
+            <h1 class="text-right">Puntuación: {{juego.nota}}</h1>
+        </div>
+        <div class="col-sm-6" style="max-width: 500px;">
+            <img src="{{juego.urlImg}}" alt="" class="img-thumbnail"
+                style="max-height: 350px;">
+            <a href="{{juego.url}}"><h5>Haz click aquí ir a InstantGaming</h5></a>
+        </div>
+        <div class="col-sm-6">
+            <h3>Descripción:</h3>
+            <p>{{juego.descripcion}}</p>
+            <a href="{{juego.url}}">Saber más...</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block encabezado %}
+<p>Esto es el encabezado</p>
+    {% endblock %}
