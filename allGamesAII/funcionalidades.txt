@@ -13,10 +13,4 @@ Juegos por menos de 10 euros
 TOP juegos más valorados (Añadir un contador de reviews con scrapping para que no se añada cualquiera, 10 minimo)
 ¿Perfil del usuario?
 
-
-¿JUEGOS SIMILARES EN KINGUIN??? PARA AÑADIR FUNCIONALIDAD?????? (Con su propio indice, en este caso no buscariamos por descripción)
-
-
-¿AÑADIR BOOSTRAP??
-
 https://github.eii.us.es/josvircas/Proyecto-curso-IISSI2

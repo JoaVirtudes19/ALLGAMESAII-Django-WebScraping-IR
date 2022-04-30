@@ -37,17 +37,18 @@ def almacenar(nombreIndice):
     if not os.path.exists(nombreIndice):
         os.mkdir(nombreIndice)
     ix = create_in(nombreIndice,schema=schema)
-    cargaEneba = enebaGaming(nombreIndice)
-    cargaInst = instGaming(nombreIndice)
-    #resultado = cargaInst and cargaEneba
-    #print(resultado)
-    return cargaEneba and cargaInst
+    pags=4
+    cargaEneba = enebaGaming(nombreIndice,pags)
+    cargaInst = instGaming(nombreIndice,pags)
+    resultado = cargaInst and cargaEneba
+    print(resultado)
+    return resultado
 
 ##AÑADIR UN PARAMETRO DE ENTRADA PARA INDICAR CUANTAS PÁGINAS CARGAR COMO MÁXIMO
 #La plataforma debe de coincidir en los scraping, así que mejor reconocerla y ponerla de de forma generica para nuestro comparador.
 #Falta añadir fecha de salida del producto
 
-def instGaming(nombreIndice):
+def instGaming(nombreIndice,pags):
     def crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generos,plataforma,fecha,precio,tienda):
         #Creamos la plataforma
         juego = Juego(nombre=nombre,url=url,urlImg=urlImg,descripcion=descripcion,nota=nota
@@ -65,77 +66,84 @@ def instGaming(nombreIndice):
         print("Empezamos")
         ix = open_dir(nombreIndice)
         wr = ix.writer()
-        for pag in range(1,2):
-            req = urllib.request.Request("https://www.instant-gaming.com/es/busquedas/?page=" + str(pag), headers={'User-Agent': 'Mozilla/5.0'})
-            f = urllib.request.urlopen(req)
-            s = BeautifulSoup(f, "lxml")
-            juegos = s.find("div",class_="listing-games").find_all("div","force-badge")
-            for div in juegos:
-                url = str(div.a['href'])
-                nombre = str(list(div.find("div",class_="name").stripped_strings)[-1])
-                print("Juego: "+ nombre)
-                precioDiv = div.find("div",class_="price")
-                #Podemos no tener descuento
-                if precioDiv != None:
-                    precio = float(str(precioDiv.string).replace('€',''))
-                else:
-                    precio = 0.0
-                print(precio)
-                descuentoDiv = div.find("div",class_="discount")
-                #Podemos no tener descuento
-                if descuentoDiv != None:
-                    descuento = int(str(descuentoDiv.string).replace('-','').replace('%',''))
-                else:
-                    descuento = 0
-                notaDiv = div.find("div","ig-search-reviews-avg")
-                if notaDiv != None:
-                    nota = float(str(notaDiv.string))/2
-                else:
-                    nota = 0.0
-                #Carga de la imagen
-                urlImg = str(div.find("img",class_="picture")['data-src'])
-                #Buscamos dentro del juego
-                req2 = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                f2 = urllib.request.urlopen(req2)
-                s2 = BeautifulSoup(f2, "lxml")
-                divDes=s2.find("div",class_="readable")
-                if divDes != None:
-                    descripcion = "".join(list(divDes.stripped_strings))
-                else:
-                    descripcion = ""
-
-                #FECHA
-                fechaDiv = s2.find("div",class_="table-cell",string="Fecha de lanzamiento:").next_sibling.next_sibling
-                if fechaDiv != None:
-                    #Tenemos que añadir un filtro para las fechas de reserva EN, por ahroa añadimos None
-                    if 'En' in str(fechaDiv.string):
-                        fecha = None
+        for pag in range(1,pags+1):
+            try: #Intentamos mirar la pagina
+                req = urllib.request.Request("https://www.instant-gaming.com/es/busquedas/?page=" + str(pag), headers={'User-Agent': 'Mozilla/5.0'})
+                f = urllib.request.urlopen(req,timeout=2)
+                s = BeautifulSoup(f, "lxml")
+                juegos = s.find("div",class_="listing-games").find_all("div","force-badge")
+                for div in juegos:
+                    url = str(div.a['href'])
+                    nombre = str(list(div.find("div",class_="name").stripped_strings)[-1])
+                    print("Juego: "+ nombre)
+                    precioDiv = div.find("div",class_="price")
+                    #Podemos no tener descuento
+                    if precioDiv != None:
+                        precio = float(str(precioDiv.string).replace('€',''))
                     else:
-                        fecha = datetime.strptime(str(fechaDiv.string), ' %d %B %Y ').date()
-                else:
-                    fecha = None
-                plataformaDiv = s2.find("div",class_="subinfos").a
-                if plataformaDiv != None:
-                    plataformaS = str(list(plataformaDiv.stripped_strings)[0]).lower()
-                else:
-                    plataformaS = "Indefinida"
-                if plataformaS not in plataformas:
-                    plat,creada = Plataforma.objects.get_or_create(nombre=plataformaS)
-                    plataformas[plataformaS] = plat
-                plataforma = plataformas[plataformaS]
-                generosDiv = s2.find("div",class_="table-cell",string="Género:").next_sibling.next_sibling
-                if generosDiv != None:
-                    generos = list(generosDiv.find_all("a"))
-                else:
-                    generos = []
-                generosJuego = []
-                for a in generos:
-                    genero = str(a.string).lower()
-                    generosJuego.append(genero)
-                    generosTotales.append(genero)
-                #Añadir guardar comentarios en el scraping, todos pegados
-                #wr.add_document(nombre=nombre,url=url,descripcion=descripcion)
-                crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio,tienda)
+                        precio = 0.0
+                    descuentoDiv = div.find("div",class_="discount")
+                    #Podemos no tener descuento
+                    if descuentoDiv != None:
+                        descuento = int(str(descuentoDiv.string).replace('-','').replace('%',''))
+                    else:
+                        descuento = 0
+                    notaDiv = div.find("div","ig-search-reviews-avg")
+                    if notaDiv != None:
+                        nota = float(str(notaDiv.string))/2
+                    else:
+                        nota = 0.0
+                    #Carga de la imagen
+                    urlImg = str(div.find("img",class_="picture")['data-src'])
+                    #Buscamos dentro del juego
+                    try: #Creamos el juego
+                        req2 = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+                        f2 = urllib.request.urlopen(req2,timeout=3)
+                        s2 = BeautifulSoup(f2, "lxml")
+                        divDes=s2.find("div",class_="readable")
+                        if divDes != None:
+                            descripcion = "".join(list(divDes.stripped_strings))
+                        else:
+                            descripcion = ""
+
+                        #FECHA
+                        fechaDiv = s2.find("div",class_="table-cell",string="Fecha de lanzamiento:").next_sibling.next_sibling
+                        if fechaDiv != None:
+                            #Tenemos que añadir un filtro para las fechas de reserva EN, por ahroa añadimos None
+                            if 'En' in str(fechaDiv.string):
+                                fecha = None
+                            else:
+                                fecha = datetime.strptime(str(fechaDiv.string), ' %d %B %Y ').date()
+                        else:
+                            fecha = None
+                        plataformaDiv = s2.find("div",class_="subinfos").a
+                        if plataformaDiv != None:
+                            plataformaS = str(list(plataformaDiv.stripped_strings)[0]).lower()
+                        else:
+                            plataformaS = "Indefinida"
+                        if plataformaS not in plataformas:
+                            plat,creada = Plataforma.objects.get_or_create(nombre=plataformaS)
+                            plataformas[plataformaS] = plat
+                        plataforma = plataformas[plataformaS]
+                        generosDiv = s2.find("div",class_="table-cell",string="Género:").next_sibling.next_sibling
+                        if generosDiv != None:
+                            generos = list(generosDiv.find_all("a"))
+                        else:
+                            generos = []
+                        generosJuego = []
+                        for a in generos:
+                            genero = str(a.string).lower()
+                            generosJuego.append(genero)
+                            generosTotales.append(genero)
+                        #Añadir guardar comentarios en el scraping, todos pegados
+                        wr.add_document(nombre=nombre,url=url,descripcion=descripcion)
+                        crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio,tienda)
+                    except Exception as e:
+                        print("Timeout")
+                        print(e)
+            except Exception as e:
+                print("Timeout")
+                print(e)
         crearJuegos(dicGeneros,generosTotales,listaJuegos,tienda)
         wr.commit()
     except Exception as e:
@@ -144,7 +152,7 @@ def instGaming(nombreIndice):
     return True
 
 
-def enebaGaming(nombreIndice):
+def enebaGaming(nombreIndice,pags):
     def crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generos,plataforma,fecha,precio,tienda):
         #Creamos la plataforma
         juego = Juego(nombre=nombre,url=url,urlImg=urlImg,descripcion=descripcion,nota=nota
@@ -162,71 +170,79 @@ def enebaGaming(nombreIndice):
         print("Empezamos")
         ix = open_dir(nombreIndice)
         wr = ix.writer()
-        for pag in range(1,2):
-            req = urllib.request.Request("https://www.eneba.com/es/store/games?page=" + str(pag) +"&platforms[]=BETHESDA&platforms[]=BLIZZARD&platforms[]=EPIC_GAMES&platforms[]=GOG&platforms[]=ORIGIN&platforms[]=OTHER&platforms[]=STEAM&platforms[]=UPLAY&regions[]=global&sortBy=POPULARITY_DESC&types[]=game", headers={'User-Agent': 'Mozilla/5.0'})
-            f = urllib.request.urlopen(req)
-            s = BeautifulSoup(f, "lxml")
-            juegos = s.find("div",class_="JZCH_t").find_all("div",class_="pFaGHa")
-            for div in juegos:
-                nombre = str(div.span.string)
-                url = "https://www.eneba.com"+str(div.a['href'])
-                urlImg = str(div.img['src'])
-                descuentoDiv = div.find("div",class_="PIG8fA")
-                #Podemos no tener descuento
-                if descuentoDiv != None:
-                    descuento = int(str(descuentoDiv.string).split(' ')[1].replace('%',''))
-                else:
-                    descuento = 0
-                #ENTRAMOS DENTRO DEL JUEGO
-                req2 = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                f2 = urllib.request.urlopen(req2)
-                s2 = BeautifulSoup(f2, "lxml")
-                precioSpan = div.find("span",class_="L5ErLT")
-                #Podemos no tener descuento
-                if precioSpan != None:
-                    precioS = str(precioSpan.string).split(",")
-                    precio = float(precioS[0]+'.'+precioS[1][:2])
-                else:
-                    precio = 0.0
-                strongPuntuacion = s2.find("strong",class_="d52_Iq")
-                if strongPuntuacion != None:
-                    nota = float(str(strongPuntuacion.string))
-                else:
-                    nota = 0.0
-                strongPlataforma = list(s2.find_all("strong",class_="cEhl9f"))[1]
-                if strongPlataforma != None:
-                    plataformaS = str(strongPlataforma.string).lower()
-                else:
-                    plataformaS = "Indefinida"
-                if plataformaS not in plataformas:
-                    plat,creada = Plataforma.objects.get_or_create(nombre=plataformaS)
-                    plataformas[plataformaS] = plat
-                plataforma = plataformas[plataformaS]
-                descripcionDiv = s2.find("div",{'class':['Wz6WhX', 'XxYK78', 'L6cSBv']})
-                #Podemos no tener descuento
-                if descripcionDiv != None:
-                    descripcion = "".join(list(descripcionDiv.stripped_strings))
-                else:
-                    descripcion = ""
-                fechaDiv = s2.find("div",class_="URplpg",string="Fecha de lanzamiento").next_sibling
-                if fechaDiv != None:
-                    #Tenemos que añadir un filtro para las fechas de reserva EN, por ahroa añadimos None
-                    if 'En' in str(fechaDiv.string):
-                        fecha = None
+        for pag in range(1,pags+1):
+            try:
+                req = urllib.request.Request("https://www.eneba.com/es/store/games?page=" + str(pag) +"&platforms[]=BETHESDA&platforms[]=BLIZZARD&platforms[]=EPIC_GAMES&platforms[]=GOG&platforms[]=ORIGIN&platforms[]=OTHER&platforms[]=STEAM&platforms[]=UPLAY&regions[]=global&sortBy=POPULARITY_DESC&types[]=game", headers={'User-Agent': 'Mozilla/5.0'})
+                f = urllib.request.urlopen(req,timeout=3)
+                s = BeautifulSoup(f, "lxml")
+                juegos = s.find("div",class_="JZCH_t").find_all("div",class_="pFaGHa")
+                for div in juegos:
+                    nombre = str(div.span.string)
+                    url = "https://www.eneba.com"+str(div.a['href'])
+                    urlImg = str(div.img['src'])
+                    descuentoDiv = div.find("div",class_="PIG8fA")
+                    #Podemos no tener descuento
+                    if descuentoDiv != None:
+                        descuento = int(str(descuentoDiv.string).split(' ')[1].replace('%',''))
                     else:
-                        fecha = datetime.strptime(str(fechaDiv.string), '%d de %B de %Y').date()
-                else:
-                    fecha = None
-                generosUl = s2.find("ul",class_="aoHRvN")
-                generosJuego = []
-                if generosUl != None:
-                    for li in generosUl:
-                        genero = str(list(li.stripped_strings)[0]).lower()
-                        generosJuego.append(genero)
-                        generosTotales.append(genero)
-                print(url)
-                print(precio)
-                crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio,tienda)
+                        descuento = 0
+                    #ENTRAMOS DENTRO DEL JUEGO
+                    try:
+                        req2 = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+                        f2 = urllib.request.urlopen(req2,timeout=3)
+                        s2 = BeautifulSoup(f2, "lxml")
+                        precioSpan = div.find("span",class_="L5ErLT")
+                        #Podemos no tener descuento
+                        if precioSpan != None:
+                            precioS = str(precioSpan.string).split(",")
+                            precio = float(precioS[0]+'.'+precioS[1][:2])
+                        else:
+                            precio = 0.0
+                        strongPuntuacion = s2.find("strong",class_="d52_Iq")
+                        if strongPuntuacion != None:
+                            nota = float(str(strongPuntuacion.string))
+                        else:
+                            nota = 0.0
+                        strongPlataforma = list(s2.find_all("strong",class_="cEhl9f"))[1]
+                        if strongPlataforma != None:
+                            plataformaS = str(strongPlataforma.string).lower()
+                        else:
+                            plataformaS = "Indefinida"
+                        if plataformaS not in plataformas:
+                            plat,creada = Plataforma.objects.get_or_create(nombre=plataformaS)
+                            plataformas[plataformaS] = plat
+                        plataforma = plataformas[plataformaS]
+                        descripcionDiv = s2.find("div",{'class':['Wz6WhX', 'XxYK78', 'L6cSBv']})
+                        #Podemos no tener descuento
+                        if descripcionDiv != None:
+                            descripcion = "".join(list(descripcionDiv.stripped_strings))
+                        else:
+                            descripcion = ""
+                        fechaDiv = s2.find("div",class_="URplpg",string="Fecha de lanzamiento").next_sibling
+                        if fechaDiv != None:
+                            #Tenemos que añadir un filtro para las fechas de reserva EN, por ahroa añadimos None
+                            if 'En' in str(fechaDiv.string):
+                                fecha = None
+                            else:
+                                fecha = datetime.strptime(str(fechaDiv.string), '%d de %B de %Y').date()
+                        else:
+                            fecha = None
+                        generosUl = s2.find("ul",class_="aoHRvN")
+                        generosJuego = []
+                        if generosUl != None:
+                            for li in generosUl:
+                                genero = str(list(li.stripped_strings)[0]).lower()
+                                generosJuego.append(genero)
+                                generosTotales.append(genero)
+                        print(url)
+                        wr.add_document(nombre=nombre,url=url,descripcion=descripcion)
+                        crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio,tienda)
+                    except Exception as e:
+                        print("Timeout")
+                        print(e)
+            except Exception as e:
+                   print("Timeout")
+                   print(e) 
         crearJuegos(dicGeneros,generosTotales,listaJuegos,tienda)
         wr.commit()
     except Exception as e:

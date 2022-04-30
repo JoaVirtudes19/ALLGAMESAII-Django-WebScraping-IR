@@ -20,7 +20,7 @@ from django.contrib.auth.models import User
 class Tienda(models.Model):
     tienda = models.CharField(max_length=20)
     def __str__(self):
-        return self.nombre
+        return self.tienda
 class Plataforma(models.Model):
     nombre = models.TextField(unique=True)
     def __str__(self):
