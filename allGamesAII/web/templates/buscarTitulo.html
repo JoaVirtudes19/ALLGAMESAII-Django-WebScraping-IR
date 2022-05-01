@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block tituloPagina %} Titulo {% endblock %}
+{% block tituloPagina %} Título {% endblock %}
 
 {% block contenido %}
 <main role="main">
@@ -14,26 +14,7 @@
             <div class="container">
                 <div class="row">
     {% for juego in juegos %}
-    <div class="col-md-4">
-        <div class="card mb-4 box-shadow">
-          <img class="card-img-top img-fluid"  alt="{{juego.nombre}}" style="max-height: 225px  !important; 
-          width: auto !important;
-          margin: auto !important;
-          display: block !important;" src="{{juego.urlImg}}">
-          <div class="card-body">
-            <p class="card-text">{{juego.nombre}}</p>
-            <p style="color: #{% if juego.tienda.tienda == 'Eneba' %}C733FF{% else %}FFB233{% endif %}">{{juego.tienda}}</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="btn-group">
-                <a href="{{juego.url}}"><button type="button" class="btn btn-sm btn-outline-secondary">Tienda</button></a>
-                <a href="/juegos/juego/{{juego.id}}"><button type="button" class="btn btn-sm btn-outline-secondary">Detalles</button></a>
-              </div>
-              <small class="text-info">-{{juego.descuento}}%</small>
-              <small class="text-success">{{juego.precio}}€</small>
-            </div>
-          </div>
-        </div>
-      </div>
+    {% include "card.html" %}
     {% empty %}
     {% endfor %}
                 </div>

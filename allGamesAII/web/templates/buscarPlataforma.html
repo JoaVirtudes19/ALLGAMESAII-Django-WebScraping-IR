@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
 
-{% block tituloPagina %} Titulo {% endblock %}
+{% block tituloPagina %} Buscar Plataforma {% endblock %}
 
 {% block contenido %}
 <main role="main">
-    <h1 class="text-center">Juegos más recientes</h1>
+    <h1 class="text-center">Buscar por plataforma</h1>
+    <form action="/buscarPlataforma/" method="post">
+      {% csrf_token %}
+      {{form}}
+      <input type='submit' value='Buscar'/>
+    </form>
         <div class="album py-5 bg-light">
             <div class="container">
                 <div class="row">
     {% for juego in juegos %}
     {% include "card.html" %}
     {% empty %}
-    <h4>No se ha cargado ningun juego todavía</h4>
     {% endfor %}
                 </div>
             </div>

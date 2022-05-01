@@ -5,11 +5,12 @@ Juegos con nombres parecidos. (En vista previa)
 PAGINA TOP, generos con más juegos
 
 FROMS:
-Inicio (Mostrando los juegos más recientes)
-Juegos (Mostrar todos los juegos) (Con paginación)
-Buscador de juego por nombre
+-------------Inicio (Mostrando los juegos más recientes)
+-------------Juegos (Mostrar todos los juegos) (Con paginación)
+-------------Buscador de juego por nombre
 Buscador de juego por descripción
-Buscador de juego por Genero
+-------------Buscador de juego por Genero
+-------------Buscador de juegos por plataforma
 
 ¿Perfil del usuario?
 

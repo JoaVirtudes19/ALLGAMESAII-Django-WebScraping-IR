@@ -26,4 +26,6 @@ urlpatterns = [
     path('juegos/juego/<int:id_juego>',juego),
     path('cargar/',cargar),
     path('buscarTitulo/',buscarTitulo),
+    path('buscarGenero/',buscarGenero),
+    path('buscarPlataforma/',buscarPlataforma),
 ]
