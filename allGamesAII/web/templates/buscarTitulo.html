@@ -4,7 +4,12 @@
 
 {% block contenido %}
 <main role="main">
-    <h1 class="text-center">Juegos más recientes</h1>
+    <h1 class="text-center">Busqueda por Título</h1>
+    <form action="/buscarTitulo/" method="post">
+      {% csrf_token %}
+      {{form}}
+      <input type='submit' value='Buscar'/>
+    </form>
         <div class="album py-5 bg-light">
             <div class="container">
                 <div class="row">
@@ -30,7 +35,6 @@
         </div>
       </div>
     {% empty %}
-    <h4>No se ha cargado ningun juego todavía</h4>
     {% endfor %}
                 </div>
             </div>

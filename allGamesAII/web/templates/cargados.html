@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+
+{% block tituloPagina %} Titulo {% endblock %}
+
+{% block contenido %}
+    <h1>Datos Cargados</h1>
+    <h2>Hemos cargado {{n}} juegos</h2>
+    {% for juego in juegos %}
+        <a href="{{juego.url}}"><h3>{{juego.nombre}}</h3></a>
+        <p>Id: {{juego.id}}</p>
+    {% endfor %}
+{% endblock %}

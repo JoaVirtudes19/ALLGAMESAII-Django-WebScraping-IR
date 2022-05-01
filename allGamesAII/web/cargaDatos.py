@@ -191,7 +191,7 @@ def enebaGaming(nombreIndice,pags):
                         req2 = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
                         f2 = urllib.request.urlopen(req2,timeout=3)
                         s2 = BeautifulSoup(f2, "lxml")
-                        precioSpan = div.find("span",class_="L5ErLT")
+                        precioSpan = div.find("span",class_="DTv7Ag").find("span",class_="L5ErLT")
                         #Podemos no tener descuento
                         if precioSpan != None:
                             precioS = str(precioSpan.string).split(",")
