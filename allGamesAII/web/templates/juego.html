@@ -12,16 +12,21 @@
         <div class="col-sm-6" style="max-width: 500px;">
             <img src="{{juego.urlImg}}" alt="" class="img-thumbnail"
                 style="max-height: 350px;">
-            <a href="{{juego.url}}"><h5>Haz click aquí ir a InstantGaming</h5></a>
         </div>
-        <div class="col-sm-4">
-            <h1 class="text-right">Puntuación: {{juego.nota}} <i class="fa fa-star" aria-hidden="true"></i></h1>
-            
+        <div class="col-sm-4 text-center">
+            <h1>Puntuación: {{juego.nota}} <i class="fa fa-star" aria-hidden="true" style="color:orange"></i></h1>
+            <h3>Precio: <span class="text-success">{{juego.precio}}€</span> <span class="text-info">(-{{juego.descuento}}%)</span></h3>
+            <div> <h5>Plataforma: <span class="badge badge-pill badge-dark">{{juego.plataforma}}</span></h5></div>
+            <div>
+                {% for genero in generos %}
+                    <span class="badge badge-pill badge-primary">{{genero}}</span>
+                {% endfor %}
+            </div>
+            <a href="{{juego.url}}"><button type="button" class="btn" style="margin-top: 20px; color: white;background-color: #{% if juego.tienda.tienda == 'Eneba' %}C733FF{% else %}FFB233{% endif %};">{{juego.tienda}}</button></a>
         </div>
         <div class="col-sm-12">
-            <h3>Descripción:</h3>
+            <h3 class="text-center">Descripción:</h3>
             <p>{{juego.descripcion}}</p>
-            <a href="{{juego.url}}">Saber más...</a>
         </div>
     </div>
 </div>

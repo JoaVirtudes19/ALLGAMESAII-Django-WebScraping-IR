@@ -10,3 +10,13 @@ def tituloWhoosh(nombreIndice,entrada):
         resultados = searcher.search(q,limit=None)
         juegos = [ Juego.objects.get(url=x['url']) for x in resultados]
     return juegos
+
+
+def descripcionWhoosh(nombreIndice,entrada):
+    ix=open_dir(nombreIndice)
+    with ix.searcher() as searcher:
+        qp = qparser.QueryParser("descripcion",ix.schema)
+        q = qp.parse(entrada)#Aquí estamos buscando por frase al añadirle las comas.
+        resultados = searcher.search(q,limit=None)
+        juegos = [ Juego.objects.get(url=x['url']) for x in resultados]
+    return juegos

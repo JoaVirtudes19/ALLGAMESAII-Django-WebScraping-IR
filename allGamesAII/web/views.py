@@ -1,9 +1,9 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from web.forms import BuscarGenero, BusquedaTitulo, BuscarPlataforma
+from web.forms import BuscarGenero, BusquedaDescripcion, BusquedaTitulo, BuscarPlataforma
 from web.models import Juego
 from web import cargaDatos
-from web.whoosh import tituloWhoosh
+from web.whoosh import descripcionWhoosh, tituloWhoosh
 # Create your views here.
 
 nombreIndice = "pruebaIndice"
@@ -15,7 +15,8 @@ def prueba(request):
 
 def juego(request,id_juego):
     juego = Juego.objects.get(id=id_juego)
-    return render(request,'juego.html',{"juego":juego})
+    generos = juego.genero.all()
+    return render(request,'juego.html',{"juego":juego,"generos":generos})
 
 def cargar(request):
     if request.method == 'POST':
@@ -38,6 +39,17 @@ def buscarTitulo(request):
     else:
         form = BusquedaTitulo()
         return render(request,'buscarTitulo.html',{'form':form})
+
+def buscarDescripcion(request):
+    if request.method == 'POST':
+        form = BusquedaDescripcion(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['descripcion']
+            juegos = descripcionWhoosh(nombreIndice,nombre)
+            return render(request,"buscarDescripcion.html",{'form':form,"juegos":juegos})
+    else:
+        form = BusquedaDescripcion()
+        return render(request,'buscarDescripcion.html',{'form':form})
 
 def buscarGenero(request):
     if request.method == 'POST':

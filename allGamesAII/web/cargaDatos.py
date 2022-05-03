@@ -37,7 +37,7 @@ def almacenar(nombreIndice):
     if not os.path.exists(nombreIndice):
         os.mkdir(nombreIndice)
     ix = create_in(nombreIndice,schema=schema)
-    pags=4
+    pags=10
     cargaEneba = enebaGaming(nombreIndice,pags)
     cargaInst = instGaming(nombreIndice,pags)
     resultado = cargaInst and cargaEneba
@@ -63,19 +63,18 @@ def instGaming(nombreIndice,pags):
     listaJuegos = list()
     try:
         tienda, creada = Tienda.objects.get_or_create(tienda = "InstantGaming")
-        print("Empezamos")
+        print("Empezamos INSTANTGAMING")
         ix = open_dir(nombreIndice)
         wr = ix.writer()
         for pag in range(1,pags+1):
             try: #Intentamos mirar la pagina
                 req = urllib.request.Request("https://www.instant-gaming.com/es/busquedas/?page=" + str(pag), headers={'User-Agent': 'Mozilla/5.0'})
-                f = urllib.request.urlopen(req,timeout=2)
+                f = urllib.request.urlopen(req,timeout=3)
                 s = BeautifulSoup(f, "lxml")
                 juegos = s.find("div",class_="listing-games").find_all("div","force-badge")
                 for div in juegos:
                     url = str(div.a['href'])
                     nombre = str(list(div.find("div",class_="name").stripped_strings)[-1])
-                    print("Juego: "+ nombre)
                     precioDiv = div.find("div",class_="price")
                     #Podemos no tener descuento
                     if precioDiv != None:
@@ -136,6 +135,7 @@ def instGaming(nombreIndice,pags):
                             generosJuego.append(genero)
                             generosTotales.append(genero)
                         #Añadir guardar comentarios en el scraping, todos pegados
+                        print(url)
                         wr.add_document(nombre=nombre,url=url,descripcion=descripcion)
                         crearJuego(nombre,url,urlImg,descripcion,nota,descuento,generosJuego,plataforma,fecha,precio,tienda)
                     except Exception as e:
@@ -167,10 +167,10 @@ def enebaGaming(nombreIndice,pags):
     listaJuegos = list()
     try:
         tienda ,creada = Tienda.objects.get_or_create(tienda="Eneba")
-        print("Empezamos")
+        print("Empezamos ENEBA")
         ix = open_dir(nombreIndice)
         wr = ix.writer()
-        for pag in range(1,pags+1):
+        for pag in range(1,pags*2+1):
             try:
                 req = urllib.request.Request("https://www.eneba.com/es/store/games?page=" + str(pag) +"&platforms[]=BETHESDA&platforms[]=BLIZZARD&platforms[]=EPIC_GAMES&platforms[]=GOG&platforms[]=ORIGIN&platforms[]=OTHER&platforms[]=STEAM&platforms[]=UPLAY&regions[]=global&sortBy=POPULARITY_DESC&types[]=game", headers={'User-Agent': 'Mozilla/5.0'})
                 f = urllib.request.urlopen(req,timeout=3)
