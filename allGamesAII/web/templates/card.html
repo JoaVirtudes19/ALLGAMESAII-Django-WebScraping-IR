@@ -1,9 +1,11 @@
 <div class="col-md-4">
-    <div class="card mb-4 box-shadow">
+    <div class="card mb-4 box-shadow" style="background-color: #333333; color: white; border-radius: 10%;">
       <img class="card-img-top img-fluid"  alt="{{juego.nombre}}" style="max-height: 225px  !important; 
       width: auto !important;
       margin: auto !important;
-      display: block !important;" src="{{juego.urlImg}}">
+      display: block !important;
+      {% if juego.tienda.tienda == 'Eneba' %}{% else %}border-top-left-radius: 10%;
+      border-top-right-radius: 10%;{% endif %}" src="{{juego.urlImg}}">
       <div class="card-body">
         <p class="card-text">{{juego.nombre}}</p>
         <p style="color: #{% if juego.tienda.tienda == 'Eneba' %}C733FF{% else %}FFB233{% endif %}">{{juego.tienda}}</p>

@@ -16,7 +16,7 @@
         <div class="col-sm-4 text-center">
             <h1>Puntuación: {{juego.nota}} <i class="fa fa-star" aria-hidden="true" style="color:orange"></i></h1>
             <h3>Precio: <span class="text-success">{{juego.precio}}€</span> <span class="text-info">(-{{juego.descuento}}%)</span></h3>
-            <div> <h5>Plataforma: <span class="badge badge-pill badge-dark">{{juego.plataforma}}</span></h5></div>
+            <div> <h5>Plataforma: <span class="badge badge-pill badge-danger">{{juego.plataforma}}</span></h5></div>
             <div>
                 {% for genero in generos %}
                     <span class="badge badge-pill badge-primary">{{genero}}</span>
