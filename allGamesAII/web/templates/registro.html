@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block tituloPagina %} Registro {% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <h1>Registrarse</h1>
+        </div>
+        <div class="col-sm-12">
+            <form action="/registro/" method="post">
+                {% csrf_token %}
+                {{form}}
+                <input type='submit' value='Registrarse' class="btn btn-success"/>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

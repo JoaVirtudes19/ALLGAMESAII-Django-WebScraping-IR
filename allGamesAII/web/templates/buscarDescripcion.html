@@ -4,7 +4,7 @@
 
 {% block contenido %}
 <main role="main">
-    <h1 class="text-center">Busqueda por descripción</h1>
+    <h1 class="text-center">Búsqueda por descripción</h1>
     <form action="/buscarDescripcion/" method="post">
       {% csrf_token %}
       {{form}}
@@ -22,7 +22,3 @@
         </div>
     </main>
 {% endblock %}
-
-{% block encabezado %}
-<p>Esto es el encabezado</p>
-    {% endblock %}

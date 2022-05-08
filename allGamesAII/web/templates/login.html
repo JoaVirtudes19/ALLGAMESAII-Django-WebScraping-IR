@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block tituloPagina %} Login {% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Iniciar sesión</h1>
+        </div>
+        <div class="col-sm-12">
+            <form action="/login/" method="post">
+                {% csrf_token %}
+                {{form}}
+                <input type='submit' value='Iniciar sesión' class="btn btn-success"/>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

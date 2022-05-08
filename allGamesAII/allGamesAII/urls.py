@@ -21,12 +21,15 @@ from web.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('inicio/',prueba),
-    path('',prueba),
+    path('inicio/',inicio),
+    path('',inicio),
     path('juegos/juego/<int:id_juego>',juego),
     path('cargar/',cargar),
     path('buscarTitulo/',buscarTitulo),
     path('buscarGenero/',buscarGenero),
     path('buscarPlataforma/',buscarPlataforma),
     path('buscarDescripcion/',buscarDescripcion),
+    path('login/',iniciarSesion),
+    path('logout/',cerrarSesion),
+    path('registro/',registrarse),
 ]

@@ -38,6 +38,18 @@
             <li class="nav-item">
                 <a class="nav-link" href="/cargar"><span class="fa fa-spinner"></span> Cargar</a>
             </li>
+            {% if user.is_anonymous %} 
+            <li class="nav-item">
+              <a class="nav-link" href="/login/"><span class="fa fa-user"></span> Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/registro/"><span class="fa fa-user"></span> Registrate</a>
+        </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="/logout/" style="color: #ceffba;"><span class="fa fa-user"></span>({{user.username}}) Cerrar sesión</a>
+        </li>
+          {% endif %}
           </ul>
         </div>
       </nav>
