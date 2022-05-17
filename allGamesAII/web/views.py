@@ -1,9 +1,9 @@
 from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
-from web.forms import BuscarGenero, BusquedaDescripcion, BusquedaTitulo, BuscarPlataforma
+from web.forms import BuscarGenero, BusquedaDescripcion, BusquedaTitulo, BuscarPlataforma,BuscarTituloGenero,BuscarTituloTienda
 from web.models import Juego,Genero
 from web import cargaDatos
-from web.whoosh import descripcionWhoosh, tituloWhoosh
+from web.whoosh import descripcionWhoosh, tituloWhoosh, tituloGeneroWhoosh,tituloTiendaWhoosh
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
@@ -105,6 +105,30 @@ def buscarGenero(request):
     else:
         form = BuscarGenero()
         return render(request,'buscarGenero.html',{'form':form})
+
+def buscarTituloGenero(request):
+    if request.method == 'POST':
+        form = BuscarTituloGenero(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombreJuego']
+            genero = form.cleaned_data['genero']
+            juegos = tituloGeneroWhoosh(nombreIndice,nombre,genero)
+            return render(request,'buscarTituloGenero.html',{'form':form,'juegos':juegos})
+    else:
+        form = BuscarTituloGenero()
+        return render(request,'buscarTituloGenero.html',{'form':form})
+
+def buscarTituloTienda(request):
+    if request.method == 'POST':
+        form = BuscarTituloTienda(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombreJuego']
+            tienda = form.cleaned_data['tienda']
+            juegos = tituloTiendaWhoosh(nombreIndice,nombre,tienda)
+            return render(request,'buscarTituloTienda.html',{'form':form,'juegos':juegos})
+    else:
+        form = BuscarTituloTienda()
+        return render(request,'buscarTituloTienda.html',{'form':form})
 
 def buscarPlataforma(request):
     if request.method == 'POST':

@@ -12,6 +12,37 @@ def tituloWhoosh(nombreIndice,entrada):
     return juegos
 
 
+def tituloGeneroWhoosh(nombreIndice,entrada,genero):
+    ix=open_dir(nombreIndice)
+    juegos = list()
+    with ix.searcher() as searcher:
+        qp = qparser.QueryParser("nombre",ix.schema)
+        q = qp.parse(entrada)#Aquí estamos buscando por frase al añadirle las comas.
+        resultados = searcher.search(q,limit=None)
+        for x in resultados:
+            try:
+                juego = Juego.objects.all().filter(genero=genero).get(url=x['url'])
+                juegos.append(juego)
+            except:
+                pass
+    return juegos
+
+
+def tituloTiendaWhoosh(nombreIndice,entrada,tienda):
+    ix=open_dir(nombreIndice)
+    juegos = list()
+    with ix.searcher() as searcher:
+        qp = qparser.QueryParser("nombre",ix.schema)
+        q = qp.parse(entrada)#Aquí estamos buscando por frase al añadirle las comas.
+        resultados = searcher.search(q,limit=None)
+        for x in resultados:
+            try:
+                juego = Juego.objects.all().filter(tienda=tienda).get(url=x['url'])
+                juegos.append(juego)
+            except:
+                pass
+    return juegos
+
 def descripcionWhoosh(nombreIndice,entrada):
     ix=open_dir(nombreIndice)
     with ix.searcher() as searcher:

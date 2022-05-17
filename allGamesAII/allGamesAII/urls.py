@@ -32,4 +32,6 @@ urlpatterns = [
     path('login/',iniciarSesion),
     path('logout/',cerrarSesion),
     path('registro/',registrarse),
+    path('buscarTituloGenero/',buscarTituloGenero),
+    path('buscarTituloTienda/',buscarTituloTienda),
 ]
