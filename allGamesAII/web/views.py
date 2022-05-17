@@ -72,28 +72,34 @@ def cargar(request):
         return render(request,"cargar.html")
 
 def buscarTitulo(request):
+    titulo = "Buscar por Título"
+    url =  '/buscarTitulo/'
     if request.method == 'POST':
         form = BusquedaTitulo(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['nombreJuego']
             juegos = tituloWhoosh(nombreIndice,nombre)
-            return render(request,"buscarTitulo.html",{'form':form,"juegos":juegos})
+            return render(request,"buscar.html",{'form':form,"juegos":juegos,'titulo':titulo,'url':url})
     else:
         form = BusquedaTitulo()
-        return render(request,'buscarTitulo.html',{'form':form})
+        return render(request,'buscar.html',{'form':form,'titulo':titulo,'url':url})
 
 def buscarDescripcion(request):
+    titulo = "Buscar por Descripción"
+    url =  '/buscarDescripcion/'
     if request.method == 'POST':
         form = BusquedaDescripcion(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['descripcion']
             juegos = descripcionWhoosh(nombreIndice,nombre)
-            return render(request,"buscarDescripcion.html",{'form':form,"juegos":juegos})
+            return render(request,"buscar.html",{'form':form,"juegos":juegos,'titulo':titulo,'url':url})
     else:
         form = BusquedaDescripcion()
-        return render(request,'buscarDescripcion.html',{'form':form})
+        return render(request,'buscar.html',{'form':form,'titulo':titulo,'url':url})
 
 def buscarGenero(request):
+    titulo = "Buscar por Genero"
+    url =  '/buscarGenero/'
     if request.method == 'POST':
         form = BuscarGenero(request.POST)
         if form.is_valid():
@@ -101,42 +107,48 @@ def buscarGenero(request):
             #g=Genero.objects.get(genero)    
             juegos = genero.juego_set.all()
             #juegos = Juego.objects.all().filter(genero=genero).order_by("-nota")
-            return render(request,'buscarGenero.html',{'form':form,'juegos':juegos})
+            return render(request,'buscar.html',{'form':form,'juegos':juegos,'titulo':titulo,'url':url})
     else:
         form = BuscarGenero()
-        return render(request,'buscarGenero.html',{'form':form})
+        return render(request,'buscar.html',{'form':form,'titulo':titulo,'url':url})
 
 def buscarTituloGenero(request):
+    titulo = "Buscar por Título y Género"
+    url =  '/buscarTituloGenero/'
     if request.method == 'POST':
         form = BuscarTituloGenero(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['nombreJuego']
             genero = form.cleaned_data['genero']
             juegos = tituloGeneroWhoosh(nombreIndice,nombre,genero)
-            return render(request,'buscarTituloGenero.html',{'form':form,'juegos':juegos})
+            return render(request,'buscar.html',{'form':form,'juegos':juegos,'titulo':titulo,'url':url})
     else:
         form = BuscarTituloGenero()
-        return render(request,'buscarTituloGenero.html',{'form':form})
+        return render(request,'buscar.html',{'form':form,'titulo':titulo,'url':url})
 
 def buscarTituloTienda(request):
+    titulo = "Buscar por Título y Tienda"
+    url =  '/buscarTituloTienda/'
     if request.method == 'POST':
         form = BuscarTituloTienda(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['nombreJuego']
             tienda = form.cleaned_data['tienda']
             juegos = tituloTiendaWhoosh(nombreIndice,nombre,tienda)
-            return render(request,'buscarTituloTienda.html',{'form':form,'juegos':juegos})
+            return render(request,'buscar.html',{'form':form,'juegos':juegos,'titulo':titulo,'url':url})
     else:
         form = BuscarTituloTienda()
-        return render(request,'buscarTituloTienda.html',{'form':form})
+        return render(request,'buscar.html',{'form':form,'titulo':titulo,'url':url})
 
 def buscarPlataforma(request):
+    titulo = "Buscar por Plataforma"
+    url =  '/buscarPlataforma/'
     if request.method == 'POST':
         form = BuscarPlataforma(request.POST)
         if form.is_valid():
             plataforma = form.cleaned_data['plataforma']
             juegos = Juego.objects.all().filter(plataforma=plataforma).order_by("-nota")
-            return render(request,'buscarPlataforma.html',{'form':form,'juegos':juegos})
+            return render(request,'buscar.html',{'form':form,'juegos':juegos,'titulo':titulo,'url':url})
     else:
         form = BuscarPlataforma()
-        return render(request,'buscarPlataforma.html',{'form':form})
+        return render(request,'buscar.html',{'form':form,'titulo':titulo,'url':url})

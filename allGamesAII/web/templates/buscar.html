@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block tituloPagina %} Buscar Género {% endblock %}
+{% block tituloPagina %} {{titulo}} {% endblock %}
 
 {% block contenido %}
 <main role="main">
-    <h1 class="text-center">Buscar por Título y Tienda</h1>
-    <form action="/buscarTituloTienda/" method="post">
+    <h1 class="text-center">{{titulo}}</h1>
+    <form action="{{url}}" method="post">
       {% csrf_token %}
       {{form}}
       <input type='submit' value='Buscar'/>
