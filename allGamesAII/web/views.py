@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
 from web.forms import BuscarGenero, BusquedaDescripcion, BusquedaTitulo, BuscarPlataforma
-from web.models import Juego
+from web.models import Juego,Genero
 from web import cargaDatos
 from web.whoosh import descripcionWhoosh, tituloWhoosh
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
@@ -59,6 +59,7 @@ def juego(request,id_juego):
     generos = juego.genero.all()
     return render(request,'juego.html',{"juego":juego,"generos":generos})
 
+@login_required(login_url="/login/")
 def cargar(request):
     if request.method == 'POST':
         if cargaDatos.almacenar(nombreIndice):
@@ -97,7 +98,9 @@ def buscarGenero(request):
         form = BuscarGenero(request.POST)
         if form.is_valid():
             genero = form.cleaned_data['genero']
-            juegos = Juego.objects.all().filter(genero=genero).order_by("-nota")
+            #g=Genero.objects.get(genero)    
+            juegos = genero.juego_set.all()
+            #juegos = Juego.objects.all().filter(genero=genero).order_by("-nota")
             return render(request,'buscarGenero.html',{'form':form,'juegos':juegos})
     else:
         form = BuscarGenero()
