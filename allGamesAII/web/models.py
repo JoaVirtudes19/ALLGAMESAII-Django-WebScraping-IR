@@ -12,6 +12,9 @@ class Gusto(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     generoInteresado =  models.ForeignKey('Genero',on_delete=models.CASCADE)
     visitas = models.IntegerField()
+    def __str__(self):
+        return str(self.user) + "/" +str(self.generoInteresado)
+
 class Tienda(models.Model):
     tienda = models.CharField(max_length=20)
     def __str__(self):

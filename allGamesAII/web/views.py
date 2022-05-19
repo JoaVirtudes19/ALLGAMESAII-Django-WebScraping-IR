@@ -20,6 +20,8 @@ def cerrarSesion(request):
     logout(request)
     return HttpResponseRedirect("/inicio")
 
+
+#ARREGLAR ERROR LOGIN INVALIDO, NO ENVIAR A PANTALLA DE CARGA
 def iniciarSesion(request):
     if request.user.is_anonymous:
         #Iniciamos sesión
@@ -49,6 +51,8 @@ def registrarse(request):
             if form.is_valid():
                 form.save()
                 return HttpResponseRedirect("/login")
+            else:
+                return HttpResponseRedirect("/registro")
         else:
             form = UserCreationForm()
             return render(request,'registro.html',{"form":form})
