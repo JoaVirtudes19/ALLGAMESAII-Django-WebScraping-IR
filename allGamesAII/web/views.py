@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
 from web.forms import BuscarGenero, BusquedaDescripcion, BusquedaTitulo, BuscarPlataforma,BuscarTituloGenero,BuscarTituloTienda
-from web.models import Juego,Genero
+from web.models import Juego,Genero,Gusto
 from web import cargaDatos
 from web.whoosh import descripcionWhoosh, tituloWhoosh, tituloGeneroWhoosh,tituloTiendaWhoosh
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
@@ -40,6 +40,7 @@ def iniciarSesion(request):
     else:
         return HttpResponseRedirect("/inicio")
 
+#ARREGLAR ERROR AL NO PONER LA CABLE CORRECTA EN REGISTRO
 def registrarse(request):
     if request.user.is_anonymous:
         #Registro
@@ -57,6 +58,13 @@ def registrarse(request):
 def juego(request,id_juego):
     juego = Juego.objects.get(id=id_juego)
     generos = juego.genero.all()
+    #Aumentamos el número de visitas para el genero relacionado con el usuario
+    if not request.user.is_anonymous:
+        for genero in generos:
+            gusto,creado = Gusto.objects.get_or_create(generoInteresado=genero,user=request.user,defaults={'visitas':1})
+            if not creado:
+                gusto.visitas = gusto.visitas + 1
+                gusto.save()
     return render(request,'juego.html',{"juego":juego,"generos":generos})
 
 @login_required(login_url="/login/")

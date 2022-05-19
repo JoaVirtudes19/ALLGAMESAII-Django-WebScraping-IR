@@ -1,14 +1,11 @@
-Login para poder entrar en carga y botón para empezar a cargar uno, otro o borrar.
+------------------Login para poder entrar en carga y botón para empezar a cargar uno, otro o borrar.
 Tus gustos al registrarte (Usuario)
-
-Juegos con nombres parecidos. (En vista previa)
-PAGINA TOP, generos con más juegos
 
 FROMS:
 -------------Inicio (Mostrando los juegos más recientes)
 -------------Juegos (Mostrar todos los juegos) (Con paginación)
 -------------Buscador de juego por nombre
-Buscador de juego por descripción
+-------------Buscador de juego por descripción
 -------------Buscador de juego por Genero
 -------------Buscador de juegos por plataforma
 

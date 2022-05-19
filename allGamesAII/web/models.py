@@ -8,15 +8,10 @@ from django.contrib.auth.models import User
 #Crear los juegos sin los enlaces y guardar en un diccionario para 
 #seguidamente añadirlo después de un bulk (django 3)
 
-#class Usuario(models.Model):
-#    user = models.OneToOneField(User, on_delete=models.CASCADE)
-#    nombre = models.TextField()
-#    apellidos = models.TextField()
-#    fechaNacimiento = models.TextField()
-#    generosInteresados =  models.ManyToManyField("Genero")
-
-#AÑADIR TIENDA A LOS JUEGOS
-
+class Gusto(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    generoInteresado =  models.ForeignKey('Genero',on_delete=models.CASCADE)
+    visitas = models.IntegerField()
 class Tienda(models.Model):
     tienda = models.CharField(max_length=20)
     def __str__(self):
