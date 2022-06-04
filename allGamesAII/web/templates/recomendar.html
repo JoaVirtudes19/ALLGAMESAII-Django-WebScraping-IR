@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block tituloPagina %} Recomendaciones {% endblock %}
+
+{% block contenido %}
+<main role="main">
+    <h1 class="text-center" style="margin-top: 30px;">Te recomendamos</h1>
+        <div class="album py-5" style="background-color: #272626;">
+            <div class="container">
+                <div class="row">
+    {% for juego in juegos %}
+    {% include "card.html" %}
+    {% empty %}
+    <h4>No tenemos información suficiente sobre ti</h4>
+    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -7,6 +7,7 @@ from web.whoosh import descripcionWhoosh, tituloWhoosh, tituloGeneroWhoosh,titul
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
+from web.recomendaciones import *
 # Create your views here.
 
 nombreIndice = "pruebaIndice"
@@ -15,13 +16,18 @@ def inicio(request):
     juegos = Juego.objects.all().order_by('-fecha')
     return render(request,'inicio.html',{"juegos":juegos})
 
+def recomendacion(request):
+    juegos = list()
+    if not request.user.is_anonymous:
+        recomendaciones=recomendarJuegos(request.user)
+        juegos = [ Juego.objects.get(id=id) for id,puntuacion in recomendaciones]
+    return render(request,'recomendar.html',{"juegos":juegos})
+
 @login_required(login_url="/login/")
 def cerrarSesion(request):
     logout(request)
     return HttpResponseRedirect("/inicio")
 
-
-#ARREGLAR ERROR LOGIN INVALIDO, NO ENVIAR A PANTALLA DE CARGA
 def iniciarSesion(request):
     if request.user.is_anonymous:
         #Iniciamos sesión
@@ -33,12 +39,9 @@ def iniciarSesion(request):
                 if access.is_active:
                     login(request,access)
                     return HttpResponseRedirect("/inicio")
-            #Mensaje error login
-            return render(request,"errorCargar.html")
-
+            return render(request,"login.html",{'error':"Usuario o contraseña incorrectos"})
         else:
-            form = AuthenticationForm()
-            return render(request,'login.html',{"form":form})
+            return render(request,'login.html')
     else:
         return HttpResponseRedirect("/inicio")
 
@@ -52,7 +55,9 @@ def registrarse(request):
                 form.save()
                 return HttpResponseRedirect("/login")
             else:
-                return HttpResponseRedirect("/registro")
+                errores = form.errors.as_data()
+                form = UserCreationForm()
+                return render(request,"registro.html",{'errores':errores,'form':form})
         else:
             form = UserCreationForm()
             return render(request,'registro.html',{"form":form})
@@ -73,6 +78,8 @@ def juego(request,id_juego):
 
 @login_required(login_url="/login/")
 def cargar(request):
+    #Borrar esto
+    load_similarities()
     if request.method == 'POST':
         if cargaDatos.almacenar(nombreIndice):
             juegos = Juego.objects.all()

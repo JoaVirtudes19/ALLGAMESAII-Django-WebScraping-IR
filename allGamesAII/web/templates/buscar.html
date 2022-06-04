@@ -5,10 +5,12 @@
 {% block contenido %}
 <main role="main">
     <h1 class="text-center">{{titulo}}</h1>
-    <form action="{{url}}" method="post">
+    <form action="{{url}}" method="post" class="text-center">
       {% csrf_token %}
+      <div class="form-group">
       {{form}}
-      <input type='submit' value='Buscar'/>
+      <input type='submit' value='Buscar' class="btn btn-info"/>
+      </div>
     </form>
     <div class="album py-5" style="background-color: #272626;">
             <div class="container">
@@ -16,6 +18,13 @@
     {% for juego in juegos %}
     {% include "card.html" %}
     {% empty %}
+    {% if request.POST %}
+    <div class="container text-center">
+        <div class="alert alert-primary" role="alert">
+            Sin resultados
+          </div>
+    </div>
+    {% endif %}
     {% endfor %}
                 </div>
             </div>

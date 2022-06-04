@@ -34,4 +34,5 @@ urlpatterns = [
     path('registro/',registrarse),
     path('buscarTituloGenero/',buscarTituloGenero),
     path('buscarTituloTienda/',buscarTituloTienda),
+    path('recomendacion/',recomendacion),
 ]

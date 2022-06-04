@@ -4,6 +4,8 @@ import re
 from django import forms
 from django.forms import ModelForm
 from web.models import Genero, Plataforma,Tienda
+from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
+from web.models import User
 
 
 #Archivo para crear formularios
@@ -22,7 +24,7 @@ class BuscarPlataforma(forms.Form):
     plataforma = forms.ModelChoiceField(label="Seleccione una plataforma", queryset=Plataforma.objects.all())
 
 class BuscarTituloGenero(forms.Form):
-    nombreJuego = forms.CharField(label="Nombre del juego", widget=forms.TextInput, required=True)
+    nombreJuego = forms.CharField(label="Nombre del juego", widget=forms.TextInput(attrs={'size': '40'}), required=True)
     genero = forms.ModelChoiceField(required=True,label="Seleccione un género", queryset=Genero.objects.all().order_by("nombre"))
 
 class BuscarTituloTienda(forms.Form):
