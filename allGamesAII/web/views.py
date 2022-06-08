@@ -45,7 +45,7 @@ def iniciarSesion(request):
     else:
         return HttpResponseRedirect("/inicio")
 
-#ARREGLAR ERROR AL NO PONER LA CABLE CORRECTA EN REGISTRO
+
 def registrarse(request):
     if request.user.is_anonymous:
         #Registro
@@ -79,7 +79,7 @@ def juego(request,id_juego):
 @login_required(login_url="/login/")
 def cargar(request):
     #Borrar esto
-    load_similarities()
+    load_similarities() ###########################################
     if request.method == 'POST':
         if cargaDatos.almacenar(nombreIndice):
             juegos = Juego.objects.all()

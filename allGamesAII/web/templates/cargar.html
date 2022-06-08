@@ -4,9 +4,14 @@
 {% block tituloPagina %} Cargar {% endblock %}
 
 {% block contenido %}
-    <h1>Carga de datos</h1>
+<div class="container text-center">
+    <div class="row">
+        <div class="col-sm-12"><h1>Carga de datos</h1>
+        <h5>Cuidado, la carga de datos es un proceso muy largo y que requiere de acceso a internet.</h5></div>
+    </div>
     <form action="/cargar/" method="post">
         {% csrf_token %}
-        <input type="submit" value="Cargar">
+        <input type="submit" value="Cargar" class="btn btn-warning">
     </form>
+</div>
 {% endblock %}

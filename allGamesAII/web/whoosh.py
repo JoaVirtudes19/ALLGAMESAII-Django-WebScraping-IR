@@ -19,9 +19,10 @@ def tituloGeneroWhoosh(nombreIndice,entrada,genero):
         qp = qparser.QueryParser("nombre",ix.schema)
         q = qp.parse(entrada)#Aquí estamos buscando por frase al añadirle las comas.
         resultados = searcher.search(q,limit=None)
+        filtro = Juego.objects.all().filter(genero=genero)
         for x in resultados:
             try:
-                juego = Juego.objects.all().filter(genero=genero).get(url=x['url'])
+                juego = filtro.get(url=x['url'])
                 juegos.append(juego)
             except:
                 pass
@@ -35,9 +36,10 @@ def tituloTiendaWhoosh(nombreIndice,entrada,tienda):
         qp = qparser.QueryParser("nombre",ix.schema)
         q = qp.parse(entrada)#Aquí estamos buscando por frase al añadirle las comas.
         resultados = searcher.search(q,limit=None)
+        filtro = Juego.objects.all().filter(tienda=tienda)
         for x in resultados:
             try:
-                juego = Juego.objects.all().filter(tienda=tienda).get(url=x['url'])
+                juego = filtro.get(url=x['url'])
                 juegos.append(juego)
             except:
                 pass

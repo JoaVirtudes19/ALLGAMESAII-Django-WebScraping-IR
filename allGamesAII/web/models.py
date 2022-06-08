@@ -3,11 +3,6 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-##Usar sistema de recomendación colab, añadir pantalla de inicio al usuario para seleccionar las categorais que le gustan
-#Podemos añadir una clave primaria
-#Crear los juegos sin los enlaces y guardar en un diccionario para 
-#seguidamente añadirlo después de un bulk (django 3)
-
 class Gusto(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     generoInteresado =  models.ForeignKey('Genero',on_delete=models.CASCADE)
