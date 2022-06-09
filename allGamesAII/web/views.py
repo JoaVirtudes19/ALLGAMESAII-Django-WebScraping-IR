@@ -78,8 +78,6 @@ def juego(request,id_juego):
 
 @login_required(login_url="/login/")
 def cargar(request):
-    #Borrar esto
-    load_similarities() ###########################################
     if request.method == 'POST':
         if cargaDatos.almacenar(nombreIndice):
             juegos = Juego.objects.all()
@@ -89,6 +87,18 @@ def cargar(request):
             return render(request,"errorCargar.html")
     else:
         return render(request,"cargar.html")
+
+
+@login_required(login_url="/login/")
+def cargarRecomendaciones(request):
+    if request.method == 'POST':
+        if Juego.objects.count() > 0:
+            load_similarities()
+            return HttpResponseRedirect('/inicio')
+        else:
+            return render(request,"errorCargar.html")
+    else:
+        return render(request,"cargarRecomendaciones.html")
 
 def buscarTitulo(request):
     titulo = "Buscar por Título"

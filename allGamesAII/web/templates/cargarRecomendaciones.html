@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block tituloPagina %} Cargar {% endblock %}
+
+{% block contenido %}
+<div class="container text-center">
+    <div class="row">
+        <div class="col-sm-12"><h1>Carga del sistema de recomendación</h1>
+        <h5>Cuidado, es necesario haber cargado la base de datos con anterioridad antes de ejecutar este proceso </h5></div>
+    </div>
+    <form action="/cargarR/" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Cargar" class="btn btn-warning">
+    </form>
+</div>
+{% endblock %}
