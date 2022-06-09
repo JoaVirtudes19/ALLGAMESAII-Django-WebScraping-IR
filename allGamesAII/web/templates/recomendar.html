@@ -11,7 +11,11 @@
     {% for juego in juegos %}
     {% include "card.html" %}
     {% empty %}
-    <h4>No tenemos información suficiente sobre ti</h4>
+    <div class="container text-center">
+        <div class="alert alert-primary" role="alert">
+            No tenemos suficiente información sobre ti
+          </div>
+    </div>
     {% endfor %}
                 </div>
             </div>
