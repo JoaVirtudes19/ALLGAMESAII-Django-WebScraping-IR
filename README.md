@@ -1,6 +1,6 @@
 # What is allGamesAII?
 
-allGamesAII is a app made in Python using Django, Beautiful Soup, Whoosh and a little Recomendation System.
+allGamesAII is a app made in Python using Django, Beautiful Soup (web scraping), Whoosh (Information retrieval) and a little Recomendation System.
 The app makes easier buying a videogame allowing the user to make cross-platform searches and receiving recomendations about other similar games based on what games has the user visited.
 
 
