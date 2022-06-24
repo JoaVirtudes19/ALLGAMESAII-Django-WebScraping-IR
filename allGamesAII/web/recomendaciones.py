@@ -9,7 +9,6 @@ def load_similarities():
 
 
 
-## Hacer cambios en esta función
 def recomendarJuegos(user):
     shelf = shelve.open("dataRS.dat")
     juegos = shelf['juegos']

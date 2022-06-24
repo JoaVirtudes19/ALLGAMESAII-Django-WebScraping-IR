@@ -167,7 +167,6 @@ def fecha_InstantGaming(soup):
     fechaDiv = soup.find("div",class_="table-cell",string="Fecha de lanzamiento:")
     if fechaDiv != None:
         fechaDiv = fechaDiv.next_sibling.next_sibling
-        #Tenemos que añadir un filtro para las fechas de reserva EN, por ahroa añadimos None
         if 'En' in str(fechaDiv.string):
             fecha = None
         else:
@@ -293,7 +292,6 @@ def descripcion_Eneba(soup):
 def fecha_Eneba(soup):
     fechaDiv = soup.find("div",class_="URplpg",string="Fecha de lanzamiento").next_sibling
     if fechaDiv != None:
-        #Tenemos que añadir un filtro para las fechas de reserva EN, por ahroa añadimos None
         if 'En' in str(fechaDiv.string):
             fecha = None
         else:
